@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="NestVault.Api/NestVault.Api.csproj" />
+  <Project Path="NestVault.Shared/NestVault.Shared.csproj" />
+</Solution>
