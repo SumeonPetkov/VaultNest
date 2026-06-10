@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="NestVault.Client.Pages.VaultItemDetailPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:f="clr-namespace:Fonts"
+    xmlns:pageModels="clr-namespace:NestVault.Client.PageModels"
+    xmlns:sf="clr-namespace:Syncfusion.Maui.Toolkit.TextInputLayout;assembly=Syncfusion.Maui.Toolkit"
+    x:DataType="pageModels:VaultItemDetailPageModel"
+    Title="{Binding PageTitle}">
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem
+            Text="Delete"
+            Command="{Binding DeleteCommand}"
+            IconImageSource="{StaticResource IconDelete}" />
+    </ContentPage.ToolbarItems>
+
+    <ScrollView>
+        <VerticalStackLayout
+            MaximumWidthRequest="560"
+            Padding="{StaticResource LayoutPadding}"
+            Spacing="{StaticResource LayoutSpacing}">
+
+            <sf:SfTextInputLayout Hint="Name">
+                <Entry Text="{Binding Name}" />
+            </sf:SfTextInputLayout>
+
+            <sf:SfTextInputLayout Hint="Username / Email">
+                <Entry Text="{Binding Username}" />
+            </sf:SfTextInputLayout>
+
+            <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8">
+                <sf:SfTextInputLayout Hint="Password" EnablePasswordVisibilityToggle="True" Grid.Column="0">
+                    <Entry Text="{Binding Password}" IsPassword="True" />
+                </sf:SfTextInputLayout>
+
+                <Button
+                    Grid.Column="1"
+                    Style="{StaticResource IconButton}"
+                    Text="{x:Static f:FluentUI.arrow_clockwise_24_regular}"
+                    SemanticProperties.Description="Generate password"
+                    VerticalOptions="Center"
+                    Command="{Binding GeneratePasswordCommand}" />
+
+                <Button
+                    Grid.Column="2"
+                    Style="{StaticResource IconButton}"
+                    Text="{x:Static f:FluentUI.copy_24_regular}"
+                    SemanticProperties.Description="Copy password"
+                    VerticalOptions="Center"
+                    Command="{Binding CopyPasswordCommand}" />
+            </Grid>
+
+            <sf:SfTextInputLayout Hint="Website URL">
+                <Entry Text="{Binding Url}" Keyboard="Url" />
+            </sf:SfTextInputLayout>
+
+            <sf:SfTextInputLayout Hint="Notes">
+                <Editor Text="{Binding Notes}" AutoSize="TextChanges" MinimumHeightRequest="100" />
+            </sf:SfTextInputLayout>
+
+            <Grid ColumnDefinitions="*,Auto">
+                <Label
+                    Text="Favorite"
+                    Style="{StaticResource Body1}"
+                    VerticalOptions="Center" />
+                <Switch Grid.Column="1" IsToggled="{Binding IsFavorite}" />
+            </Grid>
+
+            <Button
+                Text="Save"
+                Command="{Binding SaveCommand}"
+                HeightRequest="48"
+                Margin="0,10,0,0" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="NestVault.Client.Pages.GeneratorPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:f="clr-namespace:Fonts"
+    xmlns:pageModels="clr-namespace:NestVault.Client.PageModels"
+    x:DataType="pageModels:GeneratorPageModel"
+    Title="Password Generator">
+
+    <ScrollView>
+        <VerticalStackLayout
+            MaximumWidthRequest="560"
+            Padding="{StaticResource LayoutPadding}"
+            Spacing="{StaticResource LayoutSpacing}">
+
+            <Border Style="{StaticResource CardStyle}">
+                <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8">
+                    <Label
+                        Text="{Binding GeneratedPassword}"
+                        Style="{StaticResource Body1Strong}"
+                        FontFamily="Consolas"
+                        LineBreakMode="CharacterWrap"
+                        VerticalOptions="Center" />
+                    <Button
+                        Grid.Column="1"
+                        Style="{StaticResource IconButton}"
+                        Text="{x:Static f:FluentUI.arrow_clockwise_24_regular}"
+                        SemanticProperties.Description="Regenerate"
+                        Command="{Binding RegenerateCommand}" />
+                    <Button
+                        Grid.Column="2"
+                        Style="{StaticResource IconButton}"
+                        Text="{x:Static f:FluentUI.copy_24_regular}"
+                        SemanticProperties.Description="Copy"
+                        Command="{Binding CopyCommand}" />
+                </Grid>
+            </Border>
+
+            <Border Style="{StaticResource CardStyle}">
+                <VerticalStackLayout Spacing="{StaticResource LayoutSpacing}">
+
+                    <Label Text="{Binding LengthLabel}" Style="{StaticResource Body1Strong}" />
+                    <Slider
+                        Minimum="8"
+                        Maximum="64"
+                        Value="{Binding Length}" />
+
+                    <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto,Auto,Auto" RowSpacing="8">
+                        <Label Grid.Row="0" Text="Lowercase (a-z)" VerticalOptions="Center" />
+                        <Switch Grid.Row="0" Grid.Column="1" IsToggled="{Binding IncludeLowercase}" />
+
+                        <Label Grid.Row="1" Text="Uppercase (A-Z)" VerticalOptions="Center" />
+                        <Switch Grid.Row="1" Grid.Column="1" IsToggled="{Binding IncludeUppercase}" />
+
+                        <Label Grid.Row="2" Text="Digits (0-9)" VerticalOptions="Center" />
+                        <Switch Grid.Row="2" Grid.Column="1" IsToggled="{Binding IncludeDigits}" />
+
+                        <Label Grid.Row="3" Text="Symbols (!@#$…)" VerticalOptions="Center" />
+                        <Switch Grid.Row="3" Grid.Column="1" IsToggled="{Binding IncludeSymbols}" />
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

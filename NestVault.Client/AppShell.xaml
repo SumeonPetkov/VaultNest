@@ -6,29 +6,45 @@
     xmlns:sf="clr-namespace:Syncfusion.Maui.Toolkit.SegmentedControl;assembly=Syncfusion.Maui.Toolkit"
     xmlns:pages="clr-namespace:NestVault.Client.Pages"
     Shell.FlyoutBehavior="Flyout"
-    Title="NestVault.Client">
+    Title="NestVault">
+
+    <Shell.FlyoutHeader>
+        <Grid Padding="20,30,20,10">
+            <Label Text="NestVault" Style="{StaticResource Title2}" />
+        </Grid>
+    </Shell.FlyoutHeader>
 
     <ShellContent
-        Title="Dashboard"
-        Icon="{StaticResource IconDashboard}"
-        ContentTemplate="{DataTemplate pages:MainPage}"
-        Route="main" />
+        Route="login"
+        FlyoutItemIsVisible="False"
+        ContentTemplate="{DataTemplate pages:LoginPage}" />
 
     <ShellContent
-        Title="Projects"
-        Icon="{StaticResource IconProjects}"
-        ContentTemplate="{DataTemplate pages:ProjectListPage}"
-        Route="projects" />
+        Route="register"
+        FlyoutItemIsVisible="False"
+        ContentTemplate="{DataTemplate pages:RegisterPage}" />
 
     <ShellContent
-        Title="Manage Meta"
-        Icon="{StaticResource IconMeta}"
-        ContentTemplate="{DataTemplate pages:ManageMetaPage}"
-        Route="manage" />
+        Title="My Vault"
+        Icon="{StaticResource IconVault}"
+        ContentTemplate="{DataTemplate pages:VaultPage}"
+        Route="vault" />
+
+    <ShellContent
+        Title="Generator"
+        Icon="{StaticResource IconGenerator}"
+        ContentTemplate="{DataTemplate pages:GeneratorPage}"
+        Route="generator" />
+
+    <ShellContent
+        Title="Settings"
+        Icon="{StaticResource IconSettings}"
+        ContentTemplate="{DataTemplate pages:SettingsPage}"
+        Route="settings" />
 
     <Shell.FlyoutFooter>
         <Grid Padding="15">
-            <sf:SfSegmentedControl x:Name="ThemeSegmentedControl" 
+            <sf:SfSegmentedControl x:Name="ThemeSegmentedControl"
                 VerticalOptions="Center" HorizontalOptions="Center" SelectionChanged="SfSegmentedControl_SelectionChanged"
                 SegmentWidth="40" SegmentHeight="40">
                 <sf:SfSegmentedControl.ItemsSource>
