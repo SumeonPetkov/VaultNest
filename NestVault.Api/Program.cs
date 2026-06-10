@@ -8,6 +8,7 @@ using NestVault.Api.Interfaces;
 using NestVault.Api.Services;
 using Scalar.AspNetCore;
 using System.Text;
+using System.Threading.RateLimiting;
 
 namespace NestVault.Api
 {
@@ -27,6 +28,37 @@ namespace NestVault.Api
 
             builder.Services.AddDbContext<AppDbContext>(options =>
                 options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")).UseSnakeCaseNamingConvention());
+
+            var myOptions = new MyRateLimitOptions();
+            builder.Configuration.GetSection("RateLimitOptions").Bind(myOptions);
+
+            builder.Services.AddRateLimiter(options =>
+            {
+                if (myOptions.EnableIpRateLimiting) {
+                    options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(httpContext =>
+                        RateLimitPartition.GetFixedWindowLimiter(
+                            partitionKey: httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+                            factory: _ => new FixedWindowRateLimiterOptions
+                            {
+                                PermitLimit = 50,
+                                Window = TimeSpan.FromMinutes(myOptions.TimeoutInMinutes)
+                            }
+                    ));
+                }
+
+                options.OnRejected = async (context, cancellationToken) =>
+                {
+
+                    // Custom rejection handling logic
+                    context.HttpContext.Response.StatusCode = (int)Enum.GetValues(typeof(StatusCodes))
+                                                                       .GetValue(myOptions.HttpStatusCode);
+                    context.HttpContext.Response.Headers["Retry-After"] = (myOptions.TimeoutInMinutes * 60).ToString();
+
+                    await context.HttpContext.Response.WriteAsync("Rate limit exceeded. Please try again later.", cancellationToken);
+                };
+
+            });
+
 
             var jwtKey = builder.Configuration["JwtOptions:Key"];
             var jwtIssuer = builder.Configuration["JwtOptions:Issuer"];
@@ -79,6 +111,13 @@ namespace NestVault.Api
                     option.AddDocument("v1", "API Version 1.0", "/openapi/v1.json", isDefault: true);
 
                 });
+
+                Console.WriteLine(myOptions.EnableIpRateLimiting);
+                Console.WriteLine(myOptions.EnableClientIdRateLimiting);
+                Console.WriteLine(myOptions.HttpStatusCode);
+                Console.WriteLine(myOptions.RealIpHeader);
+                Console.WriteLine(myOptions.ClientIdHeader);
+                Console.WriteLine(myOptions.TimeoutInMinutes);
             }
 
             app.UseHttpsRedirection();
