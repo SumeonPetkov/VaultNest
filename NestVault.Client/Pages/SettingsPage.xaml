@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="NestVault.Client.Pages.SettingsPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:f="clr-namespace:Fonts"
+    xmlns:pageModels="clr-namespace:NestVault.Client.PageModels"
+    x:DataType="pageModels:SettingsPageModel"
+    Title="Settings">
+
+    <ScrollView>
+        <VerticalStackLayout
+            MaximumWidthRequest="560"
+            Padding="{StaticResource LayoutPadding}"
+            Spacing="{StaticResource LayoutSpacing}">
+
+            <Border Style="{StaticResource CardStyle}">
+                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="15">
+                    <Label
+                        Text="{x:Static f:FluentUI.person_32_regular}"
+                        FontFamily="{x:Static f:FluentUI.FontFamily}"
+                        FontSize="40"
+                        TextColor="{StaticResource Primary}"
+                        VerticalOptions="Center" />
+                    <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="2">
+                        <Label Text="Signed in as" Style="{StaticResource Caption1}"
+                               TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray300}}" />
+                        <Label Text="{Binding Email}" Style="{StaticResource Body1Strong}" />
+                    </VerticalStackLayout>
+                </Grid>
+            </Border>
+
+            <Border Style="{StaticResource CardStyle}">
+                <VerticalStackLayout Spacing="{StaticResource LayoutSpacing}">
+                    <Label Text="Security" Style="{StaticResource Body1Strong}" />
+                    <Label
+                        Text="Vault items are encrypted with AES-256 before they are written to this device. The encryption key never leaves your machine."
+                        Style="{StaticResource Body2}"
+                        TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray300}}" />
+                </VerticalStackLayout>
+            </Border>
+
+            <Button
+                Text="Log Out"
+                Command="{Binding LogoutCommand}"
+                IsEnabled="{Binding IsBusy, Converter={StaticResource InvertedBoolConverter}}"
+                HeightRequest="48" />
+
+            <Label
+                Text="{Binding AppVersion}"
+                Style="{StaticResource Caption1}"
+                TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray300}}"
+                HorizontalOptions="Center" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

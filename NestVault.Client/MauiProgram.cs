@@ -1,4 +1,4 @@
-﻿using CommunityToolkit.Maui;
+using CommunityToolkit.Maui;
 using Microsoft.Extensions.Logging;
 using Syncfusion.Maui.Toolkit.Hosting;
 
@@ -20,14 +20,6 @@ namespace NestVault.Client
     				{
     					handler.PlatformView.SingleSelectionFollowsFocus = false;
     				});
-
-    				Microsoft.Maui.Handlers.ContentViewHandler.Mapper.AppendToMapping(nameof(Pages.Controls.CategoryChart), (handler, view) =>
-    				{
-    					if (view is Pages.Controls.CategoryChart && handler.PlatformView is Microsoft.Maui.Platform.ContentPanel contentPanel)
-    					{
-    						contentPanel.IsTabStop = true;
-    					}
-    				});
 #endif
                 })
                 .ConfigureFonts(fonts =>
@@ -43,18 +35,31 @@ namespace NestVault.Client
     		builder.Services.AddLogging(configure => configure.AddDebug());
 #endif
 
-            builder.Services.AddSingleton<ProjectRepository>();
-            builder.Services.AddSingleton<TaskRepository>();
-            builder.Services.AddSingleton<CategoryRepository>();
-            builder.Services.AddSingleton<TagRepository>();
-            builder.Services.AddSingleton<SeedDataService>();
-            builder.Services.AddSingleton<ModalErrorHandler>();
-            builder.Services.AddSingleton<MainPageModel>();
-            builder.Services.AddSingleton<ProjectListPageModel>();
-            builder.Services.AddSingleton<ManageMetaPageModel>();
+            builder.Services.AddSingleton(_ =>
+            {
+                var client = new HttpClient
+                {
+                    BaseAddress = new Uri(Constants.ApiBaseUrl)
+                };
+                // The API records the User-Agent on login sessions and requires it.
+                client.DefaultRequestHeaders.UserAgent.ParseAdd($"NestVaultClient/{AppInfo.Current.VersionString} ({DeviceInfo.Platform})");
+                return client;
+            });
 
-            builder.Services.AddTransientWithShellRoute<ProjectDetailPage, ProjectDetailPageModel>("project");
-            builder.Services.AddTransientWithShellRoute<TaskDetailPage, TaskDetailPageModel>("task");
+            builder.Services.AddSingleton<TokenStore>();
+            builder.Services.AddSingleton<AuthApiService>();
+            builder.Services.AddSingleton<VaultCryptoService>();
+            builder.Services.AddSingleton<PasswordGeneratorService>();
+            builder.Services.AddSingleton<VaultItemRepository>();
+            builder.Services.AddSingleton<ModalErrorHandler>();
+
+            builder.Services.AddSingleton<LoginPageModel>();
+            builder.Services.AddSingleton<RegisterPageModel>();
+            builder.Services.AddSingleton<VaultPageModel>();
+            builder.Services.AddSingleton<GeneratorPageModel>();
+            builder.Services.AddSingleton<SettingsPageModel>();
+
+            builder.Services.AddTransientWithShellRoute<VaultItemDetailPage, VaultItemDetailPageModel>("item");
 
             return builder.Build();
         }

@@ -29,7 +29,7 @@
 		<MauiEnableXamlCBindingWithSourceCompilation>true</MauiEnableXamlCBindingWithSourceCompilation>
 
 		<!-- Display name -->
-		<ApplicationTitle>NestVault.Client</ApplicationTitle>
+		<ApplicationTitle>NestVault</ApplicationTitle>
 
 		<!-- App Identifier -->
 		<ApplicationId>com.companyname.nestvault.client</ApplicationId>
@@ -75,6 +75,10 @@
 		<PackageReference Include="Microsoft.Data.Sqlite.Core" Version="8.0.8" />
 		<PackageReference Include="SQLitePCLRaw.bundle_green" Version="2.1.10" />
 		<PackageReference Include="Syncfusion.Maui.Toolkit" Version="1.0.8" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\NestVault.Shared\NestVault.Shared.csproj" />
 	</ItemGroup>
 	
 </Project>

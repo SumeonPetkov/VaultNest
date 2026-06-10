@@ -1,5 +1,3 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-
 namespace NestVault.Client
 {
     public partial class App : Application
@@ -11,7 +9,20 @@ namespace NestVault.Client
 
         protected override Window CreateWindow(IActivationState? activationState)
         {
-            return new Window(new AppShell());
+            var window = new Window(new AppShell())
+            {
+                Title = "NestVault"
+            };
+
+            if (DeviceInfo.Idiom == DeviceIdiom.Desktop)
+            {
+                window.Width = 1100;
+                window.Height = 760;
+                window.MinimumWidth = 800;
+                window.MinimumHeight = 600;
+            }
+
+            return window;
         }
     }
 }

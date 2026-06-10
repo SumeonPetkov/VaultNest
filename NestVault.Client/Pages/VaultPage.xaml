@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="NestVault.Client.Pages.VaultPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:f="clr-namespace:Fonts"
+    xmlns:models="clr-namespace:NestVault.Client.Models"
+    xmlns:pageModels="clr-namespace:NestVault.Client.PageModels"
+    x:DataType="pageModels:VaultPageModel"
+    Title="My Vault">
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem
+            Text="Add"
+            Command="{Binding AddItemCommand}"
+            IconImageSource="{StaticResource IconAdd}" />
+    </ContentPage.ToolbarItems>
+
+    <Grid RowDefinitions="Auto,*" Padding="{StaticResource LayoutPadding}" RowSpacing="{StaticResource LayoutSpacing}">
+
+        <SearchBar
+            Grid.Row="0"
+            Placeholder="Search vault…"
+            Text="{Binding SearchText}" />
+
+        <CollectionView
+            Grid.Row="1"
+            ItemsSource="{Binding Items}"
+            SelectionMode="None">
+
+            <CollectionView.ItemsLayout>
+                <LinearItemsLayout Orientation="Vertical" ItemSpacing="10" />
+            </CollectionView.ItemsLayout>
+
+            <CollectionView.EmptyView>
+                <VerticalStackLayout Spacing="10" VerticalOptions="Center" HorizontalOptions="Center">
+                    <Label
+                        Text="{x:Static f:FluentUI.shield_lock_48_regular}"
+                        FontFamily="{x:Static f:FluentUI.FontFamily}"
+                        FontSize="56"
+                        TextColor="{AppThemeBinding Light={StaticResource Gray400}, Dark={StaticResource Gray500}}"
+                        HorizontalOptions="Center" />
+                    <Label
+                        Text="Your vault is empty"
+                        Style="{StaticResource Title3}"
+                        HorizontalOptions="Center" />
+                    <Label
+                        Text="Add your first login with the + button above."
+                        Style="{StaticResource Body2}"
+                        TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray300}}"
+                        HorizontalOptions="Center" />
+                </VerticalStackLayout>
+            </CollectionView.EmptyView>
+
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:VaultItem">
+                    <Border Style="{StaticResource CardStyle}">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer
+                                Command="{Binding OpenItemCommand, Source={RelativeSource AncestorType={x:Type pageModels:VaultPageModel}}}"
+                                CommandParameter="{Binding .}" />
+                        </Border.GestureRecognizers>
+
+                        <Grid ColumnDefinitions="Auto,*,Auto,Auto,Auto" ColumnSpacing="12">
+
+                            <Border
+                                Grid.Column="0"
+                                StrokeShape="RoundRectangle 22"
+                                Padding="0"
+                                WidthRequest="44"
+                                HeightRequest="44"
+                                VerticalOptions="Center"
+                                Background="{StaticResource PrimaryBrush}">
+                                <Label
+                                    Text="{Binding Initial}"
+                                    TextColor="{StaticResource White}"
+                                    Style="{StaticResource Title3}"
+                                    HorizontalOptions="Center"
+                                    VerticalOptions="Center" />
+                            </Border>
+
+                            <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="2">
+                                <Label Text="{Binding Name}" Style="{StaticResource Body1Strong}" LineBreakMode="TailTruncation" />
+                                <Label
+                                    Text="{Binding Username}"
+                                    Style="{StaticResource Caption1}"
+                                    TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray300}}"
+                                    LineBreakMode="TailTruncation" />
+                            </VerticalStackLayout>
+
+                            <Button
+                                Grid.Column="2"
+                                Style="{StaticResource IconButton}"
+                                Text="{x:Static f:FluentUI.person_24_regular}"
+                                SemanticProperties.Description="Copy username"
+                                Command="{Binding CopyUsernameCommand, Source={RelativeSource AncestorType={x:Type pageModels:VaultPageModel}}}"
+                                CommandParameter="{Binding .}" />
+
+                            <Button
+                                Grid.Column="3"
+                                Style="{StaticResource IconButton}"
+                                Text="{x:Static f:FluentUI.key_24_regular}"
+                                SemanticProperties.Description="Copy password"
+                                Command="{Binding CopyPasswordCommand, Source={RelativeSource AncestorType={x:Type pageModels:VaultPageModel}}}"
+                                CommandParameter="{Binding .}" />
+
+                            <Button
+                                Grid.Column="4"
+                                Style="{StaticResource IconButton}"
+                                Text="{x:Static f:FluentUI.star_24_regular}"
+                                TextColor="{Binding IsFavorite, Converter={StaticResource FavoriteColorConverter}}"
+                                SemanticProperties.Description="Toggle favorite"
+                                Command="{Binding ToggleFavoriteCommand, Source={RelativeSource AncestorType={x:Type pageModels:VaultPageModel}}}"
+                                CommandParameter="{Binding .}" />
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <ActivityIndicator
+            Grid.Row="1"
+            IsRunning="{Binding IsBusy}"
+            IsVisible="{Binding IsBusy}"
+            VerticalOptions="Center"
+            HorizontalOptions="Center" />
+    </Grid>
+</ContentPage>
